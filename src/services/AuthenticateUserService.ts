@@ -23,13 +23,13 @@ class AuthenticateUserService {
     const user = await usersRepo.findOne({ where: { email } });
 
     if (!user) {
-      throw new AppError('User not found,please verify your credentials', 401);
+      throw new AppError('User not found, please verify your credentials', 401);
     }
 
     const passwordMatched = await compare(password, user.password);
 
     if (!passwordMatched) {
-      throw new AppError('User not found,please verify your credentials', 401);
+      throw new AppError('User not found, please verify your credentials', 401);
     }
 
     delete user.password;
