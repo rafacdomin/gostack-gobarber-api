@@ -1,26 +1,31 @@
-import { getRepository } from 'typeorm';
 import { compare } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
+import auth from '@config/auth';
+import { injectable, inject } from 'tsyringe';
 
-import AppError from '../errors/AppErros';
-import User from '../models/User';
-import auth from '../config/auth';
+import AppError from '@shared/errors/AppErros';
+import User from '../infra/typeorm/entities/User';
+import IUsersRepository from '../repositories/IUsersRepository';
 
-interface RequestDTO {
+interface IRequestDTO {
   email: string;
   password: string;
 }
 
-interface Response {
+interface IResponse {
   user: User;
   token: string;
 }
 
+@injectable()
 class AuthenticateUserService {
-  public async execute({ email, password }: RequestDTO): Promise<Response> {
-    const usersRepo = getRepository(User);
+  constructor(
+    @inject('UsersRepository')
+    private usersRepo: IUsersRepository,
+  ) {}
 
-    const user = await usersRepo.findOne({ where: { email } });
+  public async execute({ email, password }: IRequestDTO): Promise<IResponse> {
+    const user = await this.usersRepo.findByEmail(email);
 
     if (!user) {
       throw new AppError('User not found, please verify your credentials', 401);
