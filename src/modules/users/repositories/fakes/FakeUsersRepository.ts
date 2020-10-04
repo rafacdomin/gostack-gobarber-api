@@ -18,6 +18,10 @@ class FakeUsersRepository implements IUsersRepository {
     return findUser;
   }
 
+  public async findAllProviders(except_user_id?: string): Promise<User[]> {
+    return this.users.filter(user => user.id !== except_user_id);
+  }
+
   public async create(userData: ICreateUserDTO): Promise<User> {
     const user = new User();
 
