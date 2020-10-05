@@ -1,15 +1,19 @@
 import FakeAppointmentsRepository from '@modules/appointments/repositories/fakes/FakeAppointmentsRepository';
+import FakeNotificationsRepository from '@modules/notifications/repositories/fakes/FakeNotificationsRepository';
 import AppError from '@shared/errors/AppErros';
 import CreateAppointmentService from './CreateAppointmentService';
 
 let fakeAppointmentsRepository: FakeAppointmentsRepository;
+let fakeNotificationsRepository: FakeNotificationsRepository;
 let createAppointmentService: CreateAppointmentService;
 
 describe('CreateAppointment', () => {
   beforeEach(() => {
     fakeAppointmentsRepository = new FakeAppointmentsRepository();
+    fakeNotificationsRepository = new FakeNotificationsRepository();
     createAppointmentService = new CreateAppointmentService(
       fakeAppointmentsRepository,
+      fakeNotificationsRepository,
     );
   });
 
@@ -30,10 +34,10 @@ describe('CreateAppointment', () => {
 
   it('should not be able to create two appointments with the same date', async () => {
     jest.spyOn(Date, 'now').mockImplementationOnce(() => {
-      return new Date(2020, 9, 5, 12).getTime();
+      return new Date(2020, 10, 5, 12).getTime();
     });
 
-    const date = new Date(2020, 9, 5, 14);
+    const date = new Date(2020, 10, 5, 14, 0, 0);
 
     await createAppointmentService.execute({
       date,
