@@ -4,3 +4,5 @@ build/
 tmp/*
 coverage
 !tmp/.gitkeep
+.env
+ormconfig.json
