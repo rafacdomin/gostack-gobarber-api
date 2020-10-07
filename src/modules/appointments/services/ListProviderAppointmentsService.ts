@@ -2,6 +2,7 @@ import 'reflect-metadata';
 import { inject, injectable } from 'tsyringe';
 
 import ICacheProvider from '@shared/container/providers/cacheProvider/models/ICacheProvider';
+import { classToClass } from 'class-transformer';
 import Appointment from '../infra/typeorm/entities/Appointment';
 
 import IAppointmentsRepository from '../repositories/IAppointmentsRepository';
@@ -43,7 +44,7 @@ class ListProviderAppointmentsService {
 
       await this.cacheProvider.save(
         `provider-appointments:${provider_id}:${year}-${month}-${day}`,
-        appointments,
+        classToClass(appointments),
       );
     }
 
